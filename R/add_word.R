@@ -1,8 +1,8 @@
 #' @title add_word
 #' @description adds or update an entry in the words collections
-#' @param collection_connection connection to wordsdb collection
+#' @param words_connection connection to wordsdb collection
 #' @param word word to be added/updated
-#' @param q_id q_id of the question source
+#' @param d_id q_id of the question source
 #' @param score_factor score factor used if new entry, Default: 1
 #' @param options TBD, Default: NULL
 #' @return add count, modified count (should be 1), or error message
@@ -16,39 +16,52 @@
 #' @rdname add_word
 #' @export
 
-add_word<- function(collection_connection,word,q_id,score_factor=1,options=NULL){
+add_word<- function(words_connection,word,d_id,score_factor=1,options=NULL){
 
 
 
 #Is word in the database?
 
 
-query <- collection_connection$find( paste0('{"word":"',word,'"}') )
+query <- words_connection$find( paste0('{"word":"',word,'"}') )
 
 l <- as.character(nrow(query))
 
 switch( l ,
 
 "0"={
-  entry <- data.frame(
-    word = word,
-    docs= q_id,
-    score_factor = score_factor
+
+
+  entry <- list(
+    word = jsonlite::unbox(word),
+    docs= d_id,
+    score_factor = jsonlite::unbox(score_factor)
   )
 
-  r<- collection_connection$insert(entry)
+
+
+  r<- words_connection$insert(entry)
   r$nInserted
 
   },
 
 "1" = {
 
-  docs <- paste(c(query$docs,q_id),collapse=",")
 
-  score_factor <-  round(  1/ sqrt((str_count(docs,",")+1)),4)
+  docs <- unlist(c(query$docs,d_id))
 
-  r<-  collection_connection$update(paste0('{"word":"',word,'"}'),
-     paste0('{"$set":{"docs":"',docs,'","score_factor":',score_factor,'}}')
+  score_factor <-  round(  1/ sqrt((length(docs)+1)),4)
+
+  r<-  words_connection$update(
+
+     paste0('{"word":"',word,'"}'),
+     toJSON( list(
+       "$set" = list(
+         "docs"=docs,
+         "score_factor" = jsonlite::unbox(score_factor)
+       )
+     )
+     )
      )
 
 

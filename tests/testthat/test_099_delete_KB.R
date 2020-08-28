@@ -1,5 +1,4 @@
-library(mongolite)
-library(jsonlite)
+
 
 testthat::context("Deleting")
 

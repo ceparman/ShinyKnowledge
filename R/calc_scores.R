@@ -35,22 +35,6 @@ calc_scores <- function(words_connection,words,scale_factor = NULL ){
 result <- parse_rows(values)
 
 
-result %>% group_by(doc) %>% summarise( score = sum(score_factor))
+result %>% group_by(docs) %>% summarise( score = sum(score_factor)) %>% arrange(desc(score))
 
 }
-
-
-# kb_database <- 'test_kb'
-#
-# database_url <- "mongodb://localhost"
-# words_connection <- create_collection_connection(kb_database = kb_database,database_url = database_url,collection = "wordsdb")
-#
-# words <- c("search","differ")
-#
-#
-#
-# calc_scores(words_connection,words,scale_factor = NULL )
-#
-#
-#
-#

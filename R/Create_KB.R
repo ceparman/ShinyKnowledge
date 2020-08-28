@@ -2,7 +2,6 @@
 #' @title create_KB
 #' @description Creates tables for ShinyKnowledge
 #' @param kb_database Database name.
-#' @param creds RDS object with database user and pass
 #' @param valdoc validation json doc that used in creating metadata table
 #' @param database_url full url for db.  i.e mongodb+srv://xxx:xxx@cluster0.4sd7p.mongodb.net/admin or mongodb://localhost/test
 #' @return returns "created KB successful" if sucsessful or error message if function fails.
@@ -10,13 +9,13 @@
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  KB <- create_KB(kb_database,creds,valdoc,database_url)
+#'  KB <- create_KB(kb_database,valdoc,database_url)
 #'  }
 #' }
 #' @rdname create_KB
 #' @export
 
-create_KB <- function(kb_database,creds,valdoc,database_url)
+create_KB <- function(kb_database,valdoc,database_url)
 {
 
 return_val <-   tryCatch({

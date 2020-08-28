@@ -9,13 +9,13 @@ return(df)
 
 
 parse_rows <- function(values) {
+
+
   r<- data.frame()
 
-  for (i in 1:nrow(values)){
-
-    r<- rbind(r,parse_row(values[i,]))
-
-
+  for(i in 1:nrow(values))
+  {
+    r<- rbind(r,data.frame(docs=unlist(values$docs[i]),score_factor=values$score_factor[i],word=values$word[i]))
   }
   r
 }
